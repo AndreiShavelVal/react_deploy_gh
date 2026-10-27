@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useStoreState, useStoreActions } from 'easy-peasy';
@@ -12,20 +13,35 @@ const NewPost = () => {
     const setPostBody = useStoreActions((actions) => actions.setPostBody);
 
     const navigate = useNavigate();
+    const [error, setError] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+        const numericIds = posts
+            .map((post) => Number(post.id))
+            .filter((id) => Number.isSafeInteger(id) && id > 0);
+        const id = String(Math.max(0, ...numericIds) + 1);
         const datetime = format(new Date(), 'MMMM dd, yyyy pp');
         const newPost = { id, title: postTitle, datetime, body: postBody };
-        savePost(newPost);
-        navigate('/');
+
+        setError('');
+        setIsSaving(true);
+        try {
+            await savePost(newPost);
+            navigate('/');
+        } catch (requestError) {
+            setError(requestError instanceof Error ? requestError.message : 'Unable to save the post.');
+        } finally {
+            setIsSaving(false);
+        }
     }
 
     return (
         <main className="NewPost">
             <h2>New Post</h2>
             <form className="newPostForm" onSubmit={handleSubmit}>
+                {error && <p className="statusMsg" role="alert">{error}</p>}
                 <label htmlFor="postTitle">Title:</label>
                 <input
                     id="postTitle"
@@ -41,7 +57,9 @@ const NewPost = () => {
                     value={postBody}
                     onChange={(e) => setPostBody(e.target.value)}
                 />
-                <button type="submit">Submit</button>
+                <button type="submit" disabled={isSaving}>
+                    {isSaving ? 'Saving...' : 'Submit'}
+                </button>
             </form>
         </main>
     )

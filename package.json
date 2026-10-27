@@ -2,7 +2,7 @@
   "name": "08tut",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bendersha.github.io/react_deploy_gh",
+  "homepage": "https://AndreiShavelVal/react_deploy_gh",
   "dependencies": {
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",

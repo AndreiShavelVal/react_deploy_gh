@@ -35,35 +35,23 @@ export default createStore({
         return (id) => state.posts.find(post => (post.id).toString() === id);
     }),
     savePost: thunk(async (actions, newPost, helpers) => {
+        const response = await api.post('/posts', newPost);
         const { posts } = helpers.getState();
-        try {
-            const response = await api.post('/posts', newPost);
-            actions.setPosts([...posts, response.data]);
-            actions.setPostTitle('');
-            actions.setPostBody('');
-        } catch (err) {
-            console.log(`Error: ${err.message}`);
-        }
+        actions.setPosts([...posts, response.data]);
+        actions.setPostTitle('');
+        actions.setPostBody('');
     }),
     deletePost: thunk(async (actions, id, helpers) => {
+        await api.delete(`/posts/${id}`);
         const { posts } = helpers.getState();
-        try {
-            await api.delete(`/posts/${id}`);
-            actions.setPosts(posts.filter(post => post.id !== id));
-        } catch (err) {
-            console.log(`Error: ${err.message}`);
-        }
+        actions.setPosts(posts.filter(post => String(post.id) !== String(id)));
     }),
     editPost: thunk(async (actions, updatedPost, helpers) => {
-        const { posts } = helpers.getState();
         const { id } = updatedPost;
-        try {
-            const response = await api.put(`/posts/${id}`, updatedPost);
-            actions.setPosts(posts.map(post => post.id === id ? { ...response.data } : post));
-            actions.setEditTitle('');
-            actions.setEditBody('');
-        } catch (err) {
-            console.log(`Error: ${err.message}`);
-        }
+        const response = await api.put(`/posts/${id}`, updatedPost);
+        const { posts } = helpers.getState();
+        actions.setPosts(posts.map(post => String(post.id) === String(id) ? { ...response.data } : post));
+        actions.setEditTitle('');
+        actions.setEditBody('');
     })
 });
