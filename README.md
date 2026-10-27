@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Running the app locally
+
+The app reads and writes posts through a local JSON Server backed by `data/db.json`.
+Start the API and React app in separate terminals:
+
+```sh
+npm run server
+npm start
+```
+
+The API listens at `http://localhost:3500`.
+
 ## Available Scripts
 
 In the project directory, you can run:
