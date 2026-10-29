@@ -1,5 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
+:root {
+  color-scheme: light;
+  --page-background: #efefef;
+  --surface-background: #fff;
+  --text-color: #222;
+  --muted-text-color: #555;
+  --border-color: #d3d3d3;
+  --input-background: #fff;
+  --input-border: #888;
+  --nav-background: #333;
+  --nav-hover-background: #eee;
+  --nav-hover-text: #333;
+  --accent-background: #66d8f5;
+  --accent-text: #102a33;
+  --link-color: #0056b3;
+  --error-color: #b42318;
+  --success-background: #008000;
+  --danger-background: #c62828;
+  --app-shadow: gray;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page-background: #121820;
+  --surface-background: #1e2935;
+  --text-color: #f1f5f9;
+  --muted-text-color: #b8c5d1;
+  --border-color: #405064;
+  --input-background: #263445;
+  --input-border: #718096;
+  --nav-background: #17212d;
+  --nav-hover-background: #32455a;
+  --nav-hover-text: #fff;
+  --accent-text: #102a33;
+  --link-color: #8ab4f8;
+  --error-color: #ff8a80;
+  --success-background: #187a3d;
+  --danger-background: #bd3030;
+  --app-shadow: #080c11;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +57,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
-  background-color: #efefef;
+  background-color: var(--page-background);
 }
 
 #root {
@@ -33,13 +74,16 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid #333;
-  box-shadow: 0px 0px 15px gray;
+  border: 1px solid var(--border-color);
+  box-shadow: 0px 0px 15px var(--app-shadow);
+  background-color: var(--surface-background);
+  color: var(--text-color);
 }
 
 .Header, .Footer {
   width: 100%;
-  background-color: #66d8f5;
+  background-color: var(--accent-background);
+  color: var(--accent-text);
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -50,7 +94,54 @@ body {
   font-size: 1.5rem;
 }
 
-.Header svg {
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.themeControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.themeToggle {
+  width: 3.25rem;
+  height: 1.75rem;
+  padding: 0.15rem;
+  border: 2px solid var(--accent-text);
+  border-radius: 999px;
+  background-color: var(--nav-background);
+  cursor: pointer;
+}
+
+.themeToggle:focus-visible {
+  outline: 3px solid var(--text-color);
+  outline-offset: 3px;
+}
+
+.themeToggleThumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--surface-background);
+  color: var(--text-color);
+  transition: transform 160ms ease;
+}
+
+.themeToggleThumb svg {
+  font-size: 0.75rem;
+}
+
+.themeToggle[aria-checked='true'] .themeToggleThumb {
+  transform: translateX(1.4rem);
+}
+
+.deviceIcon svg {
   font-size: 2rem;
 }
 
@@ -62,7 +153,7 @@ body {
 
 .Nav {
   width: 100%;
-  background-color: #333;
+  background-color: var(--nav-background);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -115,8 +206,8 @@ body {
 .Nav li:focus, 
 .Nav li:hover a, 
 .Nav li:focus a  {
-  background-color: #eee;
-  color: #333;
+  background-color: var(--nav-hover-background);
+  color: var(--nav-hover-text);
 }
 
 .Nav li:hover a, 
@@ -129,13 +220,14 @@ body {
   flex-grow: 1;
   padding: 1rem;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: var(--surface-background);
+  color: var(--text-color);
 }
 
 .post {
   margin-top: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Home .post a {
@@ -144,7 +236,12 @@ body {
 
 .Home .post a, 
 .Home .post a:visited {
-  color: #000;
+  color: var(--link-color);
+}
+
+a,
+a:visited {
+  color: var(--link-color);
 }
 
 .post:first-child {
@@ -158,6 +255,7 @@ body {
 .postDate {
   font-size: 0.75rem;
   margin-top: 0.25rem;
+  color: var(--muted-text-color);
 }
 
 .postBody {
@@ -183,6 +281,19 @@ body {
   border-radius: 0.25rem;
   margin-right: 0.25rem;
   outline: none;
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+}
+
+.searchForm input[type="text"] {
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+}
+
+.searchForm input[type="text"]::placeholder {
+  color: var(--muted-text-color);
 }
 
 .newPostForm textarea {
@@ -197,6 +308,9 @@ body {
   padding: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
+  background-color: var(--accent-background);
+  color: var(--accent-text);
+  border: 1px solid var(--border-color);
 }
 
 .Missing p, .PostPage p, .NewPost p {
@@ -215,15 +329,19 @@ body {
 }
 
 .editButton {
-  background-color:  green;
+  background-color: var(--success-background);
 }
 
 .deleteButton {
-  background-color:  red;
+  background-color: var(--danger-background);
 }
 
 .statusMsg {
   margin-top: 2rem;
+}
+
+.errorMsg {
+  color: var(--error-color);
 }
 
 @media only screen and (min-width: 610px) {
@@ -250,8 +368,8 @@ body {
   .Nav li:focus, 
   .Nav li:hover a, 
   .Nav li:focus a  {
-    background-color: #eee;
-    color: #333;
+    background-color: var(--nav-hover-background);
+    color: var(--nav-hover-text);
   }
 
   .searchForm {
@@ -270,7 +388,7 @@ body {
 
 @media only screen and (min-width: 992px) {
 
-  .Header svg {
+  .deviceIcon svg {
     font-size: 3rem;
   }
 

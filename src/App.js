@@ -8,13 +8,14 @@ import EditPost from './EditPost';
 import About from './About';
 import Missing from './Missing';
 import { Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useAxiosFetch from './hooks/useAxiosFetch';
 import { useStoreActions } from 'easy-peasy';
 
 function App() {
 
   const setPosts = useStoreActions((actions) => actions.setPosts);
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
   const { data, fetchError, isLoading } = useAxiosFetch('http://localhost:3500/posts');
 
@@ -22,9 +23,19 @@ function App() {
     setPosts(data);
   }, [data, setPosts])
 
+  useEffect(() => {
+    const theme = isDarkMode ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }, [isDarkMode])
+
   return (
     <div className="App">
-      <Header title="React JS Blog" />
+      <Header
+        title="React JS Blog"
+        isDarkMode={isDarkMode}
+        toggleTheme={() => setIsDarkMode((currentTheme) => !currentTheme)}
+      />
         <Nav />
         <Routes>
           <Route 
